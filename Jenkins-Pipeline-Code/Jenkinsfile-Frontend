@@ -16,30 +16,17 @@ pipeline {
 
     stages {
 
-        stage('PR Check') {
-            when {
-                expression {
-                    // Run only for PR builds
-                    return env.CHANGE_ID?.trim()
-                }
-            }
-            steps {
-                echo "Triggered by PR #${env.CHANGE_ID} from branch ${env.CHANGE_BRANCH}"
-            }
-        }
 
-        stage('Clean Workspace') {
+        stage('PR Check') {
             when { expression { env.CHANGE_ID } }
             steps {
-                cleanWs()
+                echo "Triggered by PR #${env.CHANGE_ID} from ${env.CHANGE_BRANCH} → ${env.CHANGE_TARGET}"
             }
         }
 
         stage('Checkout Code') {
-            when { expression { env.CHANGE_ID } }
             steps {
-                git branch: 'main', credentialsId: 'Token',
-                    url: 'https://github.com/BharathKumarS23121995/Bharath-End-to-End-Kubernetes-Three-Tier-DevSecOps-Project.git'
+                checkout scm
             }
         }
 
